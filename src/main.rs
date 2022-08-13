@@ -1,5 +1,5 @@
 use chrono::{Utc, DateTime, Duration};
-use discord_news_bot::WEBHOOK_URL;
+use discord_news_bot::{WEBHOOK_URL, RUN_FREQUENCY};
 use reqwest::Client;
 use serde_json::{json, Value};
 use xmltojson::{to_json};
@@ -10,6 +10,7 @@ use std::{error::Error};
 async fn main() -> Result<(), Box<dyn Error>> {
     // init request client
     let client = Client::new();
+    
 
     // GET request to rss feed
     let get_resp = client.get("https://decrypt.co/feed")
@@ -38,8 +39,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
             Err(ref _e) => result.expect("Error parsing rfc2822 pub_date string"),
         }; 
         
-        // Check if article was published in the past hour
-        if time_now.signed_duration_since(pub_date) <= Duration::seconds(3600) {
+        // Check if article was published since the last time the script was ran
+        if time_now.signed_duration_since(pub_date) <= Duration::seconds(RUN_FREQUENCY as i64) {
             // prep body for POST request
             let post_body = json!({
                 "username": "CryptoBot",
