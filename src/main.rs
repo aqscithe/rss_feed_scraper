@@ -11,9 +11,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // init request client
     let client = Client::new();
 
-    for feed_idx in 0..RSS_FEEDS.len() {
+    for feed in &RSS_FEEDS {
         // GET request to rss feed
-        let get_resp = client.get(RSS_FEEDS[feed_idx])
+        let get_resp = client.get(*feed)
         .send()
         .await?
         .text()
