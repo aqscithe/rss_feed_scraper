@@ -1,0 +1,16 @@
+[package]
+name = "discord_news_bot"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+reqwest = { version = "0.11.11", features = ["rustls-tls"], default-features = false }
+tokio = { version = "1", features = ["macros"], default-features = false}
+serde_json = { version = "1.0.83", features = [], default-features = false }
+xmltojson = { version = "0.1.1", features = [], default-features = false}
+chrono = { version = "0.4.20", features = ["clock"], default-features = false }
+lambda_runtime = { version = "0.6.0", features = [], default-features = false}
+
+[features]
