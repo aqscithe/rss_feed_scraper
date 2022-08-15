@@ -1,13 +1,19 @@
 use chrono::{Utc, DateTime, Duration};
 use discord_news_bot::{WEBHOOK_URL, RUN_FREQUENCY, RSS_FEEDS};
+use lambda_runtime::{service_fn, LambdaEvent, Error};
 use reqwest::Client;
 use serde_json::{json, Value};
 use xmltojson::{to_json};
-use std::{error::Error};
 
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+async fn main() -> Result<(), Error> {
+    let func = service_fn(func);
+    lambda_runtime::run(func).await?;
+    Ok(())
+}
+
+async fn func(_event: LambdaEvent<Value>) -> Result<Value, Error> {
     // init request client
     let client = Client::new();
 
@@ -57,7 +63,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    Ok(())
+    Ok(json!({}))
 
 }
 
