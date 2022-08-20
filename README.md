@@ -1,1 +1,1 @@
-# discord_news_bot
+# rss-news-feed-scraper

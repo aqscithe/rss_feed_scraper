@@ -3,8 +3,6 @@ pipeline {
   options {
     withAWS(region: 'us-west-2', credentials: 'aws')
   }
-  environment {}
-  post {}
   stages {
     // Build Rust Cargo Lambda Image
     stage('Build Cargo Lambda') {
@@ -14,7 +12,6 @@ pipeline {
       environment {
         REGION = 'us-west-2'
       }
-      options {}
       steps {
         withCredentials(bindings: [string(credentialsId: 'doppler-rss-feed-scraper-prd-token', variable: 'DOPPLER_SERVICE_TOKEN')]) {
           withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'ACCESS_KEY', passwordVariable: 'SECRET_KEY')]) {
@@ -30,4 +27,5 @@ pipeline {
       } 
     }
   }
+  
 }
