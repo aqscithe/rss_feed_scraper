@@ -1,5 +1,5 @@
 use chrono::{Utc, DateTime, Duration};
-use discord_news_bot::{WEBHOOK_URL, RUN_FREQUENCY, RSS_FEEDS};
+use rss_news_feed_scraper::{WEBHOOK_URL, RUN_FREQUENCY, RSS_FEEDS};
 use lambda_runtime::{service_fn, LambdaEvent, Error};
 use reqwest::Client;
 use serde_json::{json, Value};
