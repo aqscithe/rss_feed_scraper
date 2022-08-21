@@ -3,6 +3,12 @@ pipeline {
   options {
     withAWS(region: 'us-west-2', credentials: 'aws')
   }
+  environment {
+    AWS_ACCESS_KEY_ID = getAccessKey()
+    AWS_SECRET_ACCESS_KEY = getSecretKey()
+    DOPPLER_SERVICE_TOKEN = getDopplerToken()
+    REGION = 'us-west-2'
+  }
   stages {
     // Build Rust Cargo Lambda Image
     stage('Build Cargo Lambda') {
@@ -18,12 +24,6 @@ pipeline {
       }
       when {
         expression { BRANCH_NAME ==~ /(aws-lambda\/main)/ }
-      }
-      environment {
-        AWS_ACCESS_KEY_ID = getAccessKey()
-        AWS_SECRET_ACCESS_KEY = getSecretKey()
-        DOPPLER_SERVICE_TOKEN = getDopplerToken()
-        REGION = 'us-west-2'
       }
       steps {
         sh 'echo $USER'
