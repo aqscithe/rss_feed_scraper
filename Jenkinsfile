@@ -2,12 +2,21 @@ pipeline {
   agent none
   options {
     withAWS(region: 'us-west-2', credentials: 'aws')
+    maskPasswords()
   }
   environment {
     AWS_ACCESS_KEY_ID = getAccessKey()
     AWS_SECRET_ACCESS_KEY = getSecretKey()
     DOPPLER_SERVICE_TOKEN = getDopplerToken()
     REGION = 'us-west-2'
+  }
+  post {
+    // Clean after build
+    always {
+      cleanWs(deleteDirs: true,
+          notFailBuild: true
+      )
+    }
   }
   stages {
     // Build Rust Cargo Lambda Image
