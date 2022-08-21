@@ -15,8 +15,12 @@ pipeline {
       agent { 
         dockerfile {
           filename 'Dockerfile'
-          additionalBuildArgs '--build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
-          additionalBuildArgs '--build-arg DOPPLER_SERVICE_TOKEN=${DOPPLER_SERVICE_TOKEN} --build-arg REGION=${REGION}'
+          additionalBuildArgs '''
+            --build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} 
+            --build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} 
+            --build-arg DOPPLER_SERVICE_TOKEN=${DOPPLER_SERVICE_TOKEN} 
+            --build-arg REGION=${REGION}
+          '''
 
         } 
       }
