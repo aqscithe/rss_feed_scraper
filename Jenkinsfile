@@ -31,6 +31,7 @@ pipeline {
       }
       steps {
         sh 'echo $USER'
+        sh 'docker system prune'
       } 
     }
   }
