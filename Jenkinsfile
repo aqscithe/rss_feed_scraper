@@ -6,27 +6,46 @@ pipeline {
   stages {
     // Build Rust Cargo Lambda Image
     stage('Build Cargo Lambda') {
-      agent { dockerfile true }
+      agent { 
+        dockerfile {
+          filename 'Dockerfile'
+          additionalBuildArgs '--build-arg AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}'
+          additionalBuildArgs '--build-arg AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}'
+          additionalBuildArgs '--build-arg DOPPLER_SERVICE_TOKEN=${DOPPLER_SERVICE_TOKEN}'
+          additionalBuildArgs '--build-arg REGION=${REGION}'
+
+        } 
+      }
       when {
         expression { BRANCH_NAME ==~ /(aws-lambda\/main)/ }
       }
       environment {
+        AWS_ACCESS_KEY_ID = getAccessKey()
+        AWS_SECRET_ACCESS_KEY = getSecretKey()
+        DOPPLER_SERVICE_TOKEN = getDopplerToken()
         REGION = 'us-west-2'
       }
       steps {
-        withCredentials(bindings: [string(credentialsId: 'doppler-rss-feed-scraper-prd-token', variable: 'DOPPLER_SERVICE_TOKEN')]) {
-          withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'ACCESS_KEY', passwordVariable: 'SECRET_KEY')]) {
-            sh 'export AWS_ACCESS_KEY_ID=${ACCESS_KEY} && export AWS_SECRET_ACCESS_KEY=${SECRET_KEY}'
-            sh 'export HISTIGNORE="doppler*"'
-            sh 'echo "${DOPPLER_SERVICE_TOKEN}" | doppler configure set token --scope /'
-            sh '''
-              doppler run --command="cargo lambda deploy --region ${REGION} --iam-role \
-                $LAMBDA_IAM_ROLE rss-news-feed-scraper"
-            '''
-          }
-        }
+        sh 'echo $USER'
       } 
     }
   }
+}
 
+String getAccessKey() {
+  withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'ACCESS_KEY', passwordVariable: 'SECRET_KEY')]) {
+    return ${ACCESS_KEY}
+  }
+}
+
+String getSecretKey() {
+  withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'ACCESS_KEY', passwordVariable: 'SECRET_KEY')]) {
+    return ${SECRET_KEY}
+  }
+}
+
+String getDopplerToken() {
+  withCredentials(bindings: [string(credentialsId: 'doppler-rss-feed-scraper-prd-token', variable: 'DOPPLER_SERVICE_TOKEN')]) {
+    return ${DOPPLER_SERVICE_TOKEN}
+  }
 }
