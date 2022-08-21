@@ -15,7 +15,6 @@ RUN doppler secrets download --no-file --format env | grep DISCORD_CHANNEL_WEBHO
 # Build lambda rust app
 COPY ./ ./
 
-RUN search and replace grep for doppler env variables on src/lib.rs file
 RUN sed -i 's/\$DISCORD_CHANNEL_WEBHOOK/\"$DISCORD_CHANNEL_WEBHOOK\"/g' src/lib.rs
 RUN sed -i 's/\$RSS_FEEDS/$RSS_FEEDS/g'
 RUN cargo lambda build --release
