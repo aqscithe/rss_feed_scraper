@@ -1,11 +1,12 @@
 pipeline {
-  agent { dockerfile true }
+  agent none
   options {
     withAWS(region: 'us-west-2', credentials: 'aws')
   }
   stages {
     // Build Rust Cargo Lambda Image
     stage('Build Cargo Lambda') {
+      agent { dockerfile true }
       when {
         expression { BRANCH_NAME ==~ /(aws-lambda\/main)/ }
       }
@@ -27,5 +28,5 @@ pipeline {
       } 
     }
   }
-  
+
 }
