@@ -6,16 +6,21 @@ ARG AWS_SECRET_ACCESS_KEY
 ARG DOPPLER_SERVICE_TOKEN
 ARG REGION
 
-# Build lambda rust app
-COPY ./ ./
-RUN cargo lambda build --release
-
 RUN export HISTIGNORE="doppler*"
 RUN echo "$DOPPLER_SERVICE_TOKEN" | doppler configure set token --scope /
 
-RUN doppler secrets
+RUN doppler secrets download --no-file --format env | grep RSS_FEEDS
+RUN doppler secrets download --no-file --format env | grep DISCORD_CHANNEL_WEBHOOK
+
+# Build lambda rust app
+COPY ./ ./
+
+RUN search and replace grep for doppler env variables on src/lib.rs file
+RUN sed -i 's/\$DISCORD_CHANNEL_WEBHOOK/\"$DISCORD_CHANNEL_WEBHOOK\"/g' src/lib.rs
+RUN sed -i 's/\$RSS_FEEDS/$RSS_FEEDS/g'
+RUN cargo lambda build --release
+
+
+
 RUN doppler secrets download --no-file --format env | grep LAMBDA_IAM_ROLE
-RUN doppler run --command="echo ${LAMBDA_IAM_ROLE}"
-RUN doppler run --command="echo ${RSS_FEEDS}"
-#RUN doppler run --command="cargo lambda deploy --region ${REGION} --iam-role ${LAMBDA_IAM_ROLE} rss-news-feed-scraper"
-RUN cargo lambda deploy --region ${REGION} --iam-role ${LAMBDA_IAM_ROLE} rss-news-feed-scraper
+RUN cargo lambda deploy -v --region ${REGION} --iam-role ${LAMBDA_IAM_ROLE} rss-news-feed-scraper
