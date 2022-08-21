@@ -4,7 +4,7 @@ pipeline {
     withAWS(region: 'us-west-2', credentials: 'aws')
   }
   environment {
-    AWS_ACCESS_KEY_ID = maskPasswords(getAccessKey())
+    AWS_ACCESS_KEY_ID = getAccessKey()
     AWS_SECRET_ACCESS_KEY = getSecretKey()
     DOPPLER_SERVICE_TOKEN = getDopplerToken()
     REGION = 'us-west-2'
