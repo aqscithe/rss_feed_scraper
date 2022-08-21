@@ -7,6 +7,7 @@ ARG DOPPLER_SERVICE_TOKEN
 ARG REGION
 
 RUN echo ${REGION}
+RUN echo ${AWS_ACCESS_KEY_ID}
 
 # Build lambda rust app
 COPY ./ ./
