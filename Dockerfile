@@ -15,4 +15,6 @@ RUN cargo lambda build --release
 
 RUN export HISTIGNORE="doppler*"
 RUN echo "$DOPPLER_SERVICE_TOKEN" | doppler configure set token --scope /
+
+RUN doppler run --command="echo $LAMBDA_IAM_ROLE"
 RUN doppler run --command="cargo lambda deploy --region ${REGION} --iam-role ${LAMBDA_IAM_ROLE} rss-news-feed-scraper"
