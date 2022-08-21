@@ -18,4 +18,4 @@ RUN export LAMBDA_IAM_ROLE=`doppler secrets get LAMBDA_IAM_ROLE`
 RUN doppler run --command="echo ${LAMBDA_IAM_ROLE}"
 RUN doppler run --command="echo ${RSS_FEEDS}"
 #RUN doppler run --command="cargo lambda deploy --region ${REGION} --iam-role ${LAMBDA_IAM_ROLE} rss-news-feed-scraper"
-RUN cargo lambda deploy --region ${REGION} --iam-role ${LAMBDA_IAM_ROLE} rss-news-feed-scraper
+RUN cargo lambda deploy --region ${REGION} --iam-role arn:aws:iam::506430929896:role/service-role/testLambdaExecutionRole rss-news-feed-scraper
