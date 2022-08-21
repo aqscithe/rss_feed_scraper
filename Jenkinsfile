@@ -34,7 +34,7 @@ pipeline {
 
 String getAccessKey() {
   withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'ACCESS_KEY', passwordVariable: 'SECRET_KEY')]) {
-    return "${ACCESS_KEY}"
+    return "$ACCESS_KEY"
   }
 }
 
