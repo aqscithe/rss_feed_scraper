@@ -9,14 +9,6 @@ pipeline {
     DOPPLER_SERVICE_TOKEN = getDopplerToken()
     REGION = 'us-west-2'
   }
-  post {
-    // Clean after build
-    always {
-      cleanWs(deleteDirs: true,
-          notFailBuild: true
-      )
-    }
-  }
   stages {
     // Build Rust Cargo Lambda Image
     stage('Build Cargo Lambda') {
@@ -28,6 +20,14 @@ pipeline {
       }
       when {
         expression { BRANCH_NAME ==~ /(aws-lambda\/main)/ }
+      }
+      post {
+        // Clean after build
+        always {
+          cleanWs(deleteDirs: true,
+              notFailBuild: true
+          )
+        }
       }
       steps {
         sh 'echo $USER'
