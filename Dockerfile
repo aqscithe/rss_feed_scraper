@@ -6,6 +6,8 @@ ARG AWS_SECRET_ACCESS_KEY
 ARG DOPPLER_SERVICE_TOKEN
 ARG REGION
 
+RUN echo ${REGION}
+
 # Build lambda rust app
 COPY ./ ./
 RUN cargo lambda build --release
