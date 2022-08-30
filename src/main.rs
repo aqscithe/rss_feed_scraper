@@ -44,13 +44,19 @@ async fn func(_event: LambdaEvent<Value>) -> Result<Value, Error> {
                 Ok(_o) => result.unwrap(),
                 Err(ref _e) => result.expect("Error parsing rfc2822 pub_date string"),
             }; 
+
+            let item_title = if items[idx]["title"]["#cdata"].is_string() {
+                &items[idx]["title"]["#cdata"]
+            } else {
+                &items[idx]["title"]
+            };
             
             // Check if article was published since the last time the script was ran
             if time_now.signed_duration_since(pub_date) <= Duration::seconds(RUN_FREQUENCY as i64) {
                 // prep body for POST request
                 let post_body = json!({
                     "username": "CryptoBot",
-                    "content": format!("{}\n{}", items[idx]["title"], items[idx]["link"])
+                    "content": format!("{}\n{}", item_title, items[idx]["link"])
                 });
 
                 // POST request to webhook
